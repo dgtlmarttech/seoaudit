@@ -104,7 +104,7 @@ const Indexation = ({ result }) => {
           </table>
           <div className="mt-8 pt-4 border-t border-gray-300">
             <p className={questionClasses}>
-              <strong>Why is 'Robots.txt' required?</strong>
+              <strong>Why is &#39;Robots.txt&#39; required?</strong>
             </p>
             <p className={answerClasses}>
               Robots.txt file guides search engine crawlers, directing them to prioritize indexing important pages and avoiding indexing irrelevant or sensitive content, thus enhancing website SEO performance and visibility.
@@ -145,10 +145,10 @@ const Indexation = ({ result }) => {
           </table>
           <div className="mt-8 pt-4 border-t border-gray-300">
             <p className={questionClasses}>
-              <strong>Why is 'sitemap.xml' required?</strong>
+              <strong>Why is &#39;sitemap.xml&#39; required?</strong>
             </p>
             <p className={answerClasses}>
-              A sitemap.xml file is crucial for website SEO as it provides search engines with a comprehensive roadmap of the site's structure and content, facilitating efficient crawling and indexing, and ultimately improving search engine visibility and rankings.
+              A sitemap.xml file is crucial for website SEO as it provides search engines with a comprehensive roadmap of the site&apos;s structure and content, facilitating efficient crawling and indexing, and ultimately improving search engine visibility and rankings.
             </p>
           </div>
         </div>

@@ -107,7 +107,7 @@ const Links = ({ result }) => { // Destructure result directly from props
                 <strong>Why External Links?</strong>
               </p>
               <p className={answerClasses}>
-                External links are essential for SEO as they validate a website's credibility and authority by associating it with reputable sources, improving search engine rankings and trustworthiness while enhancing the site's overall visibility and domain authority in search engine results.
+                External links are essential for SEO as they validate a website&apos;s credibility and authority by associating it with reputable sources, improving search engine rankings and trustworthiness while enhancing the site&apos;s overall visibility and domain authority in search engine results.
               </p>
             </div>
           </div>

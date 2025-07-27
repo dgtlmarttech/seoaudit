@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const DEFAULT_IMAGE = 'https://placehold.co/100x100/CCCCCC/000000?text=No+Image';
 
@@ -40,11 +41,11 @@ const ImageTags = ({ result }) => { // Destructure result directly from props
                 <tr>
                   <td className={tdClasses}>
                     {favicon ? (
-                      <img
+                      <Image
                         src={favicon.href}
                         alt="Favicon Preview"
-                        width="50"
-                        height="50"
+                        width={50}
+                        height={50}
                         className="rounded-md object-cover"
                         onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGE; }}
                       />
@@ -165,11 +166,11 @@ const ImageTags = ({ result }) => { // Destructure result directly from props
                           )}
                         </td>
                         <td className={tdClasses}>
-                          <img
+                          <Image
                             src={validSrc}
                             alt={img.alt || `Image ${index + 1}`}
-                            width="100"
-                            height="100"
+                            width={100}
+                            height={100}
                             className="rounded-md object-cover"
                             onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_IMAGE; }}
                           />

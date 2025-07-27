@@ -185,7 +185,7 @@ const TwitterCards = ({ result }) => {
             </table>
             <div className="mt-8 pt-4 border-t border-gray-300">
               <p className={questionClasses}>
-                <strong>Why is 'Twitter Cards' required?</strong>
+                <strong>Why is &#39;Twitter Cards&#39; required?</strong>
               </p>
               <p className={answerClasses}>
                 Implementing Twitter Cards is crucial for SEO as it enhances the

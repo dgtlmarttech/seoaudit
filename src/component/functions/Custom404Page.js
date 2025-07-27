@@ -71,7 +71,7 @@ const Custom404 = ({ result }) => { // Destructure result directly from props
 
         <div className="mt-8 pt-4 border-t border-gray-300">
           <p className='text-lg font-semibold text-gray-800 mb-2'>
-            <strong>Why is 'Custom 404 Page' required?</strong>
+            <strong>Why is &#39;Custom 404 Page&#39; required?</strong>
           </p>
           <p className='text-gray-700 leading-relaxed'>
             A custom 404 page is essential for SEO as it enhances user experience by guiding visitors to relevant content

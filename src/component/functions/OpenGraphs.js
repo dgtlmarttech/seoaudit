@@ -183,7 +183,7 @@ const OpenGraphs = ({ result }) => { // Destructure result directly from props
             </table>
             <div className="mt-8 pt-4 border-t border-gray-300">
               <p className={questionClasses}>
-                <strong>Why is 'Open Graphs' required?</strong>
+                <strong>Why is &#39;Open Graphs&#39; required?</strong>
               </p>
               <p className={answerClasses}>
                 Open Graphs are crucial for SEO as they optimize how web pages appear

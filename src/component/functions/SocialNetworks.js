@@ -84,10 +84,10 @@ const SocialNetworks = ({ result }) => { // Destructure result directly from pro
             </table>
             <div className="mt-8 pt-4 border-t border-gray-300">
               <p className={questionClasses}>
-                <strong>Why are 'Social Media Links' required?</strong>
+                <strong>Why are &#39;Social Media Links&#39; required?</strong>
               </p>
               <p className={answerClasses}>
-                Including social media links in a webpage is crucial for SEO as it fosters social engagement and shares, expanding the website's reach and potentially increasing traffic and visibility.
+                Including social media links in a webpage is crucial for SEO as it fosters social engagement and shares, expanding the website&#39;s reach and potentially increasing traffic and visibility.
               </p>
             </div>
           </div>

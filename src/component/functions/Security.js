@@ -114,7 +114,7 @@ const Security = ({ result: data }) => { // Destructure result and rename to dat
               <tr>
                 <th className={`${thClasses} w-1/12`}>S.No</th>
                 <th className={`${thClasses} w-5/12`}>Link</th>
-                <th className={`${thClasses} w-3/12`}>REL="NOOPENER" OR "NOREFERRER"</th>
+                <th className={`${thClasses} w-3/12`}>REL=&#34;NOOPENER&#34; OR &#34;NOREFERRER&#34;</th>
                 <th className={`${thClasses} w-3/12`}>Element</th>
               </tr>
             </thead>
@@ -146,7 +146,7 @@ const Security = ({ result: data }) => { // Destructure result and rename to dat
                 })
               ) : (
                 <tr>
-                  <td colSpan="4" className={`${tdClasses} text-center text-gray-500`}>No relevant external links found requiring 'noopener' or 'noreferrer'.</td>
+                  <td colSpan="4" className={`${tdClasses} text-center text-gray-500`}>No relevant external links found requiring &#39;noopener&#39; or &#39;noreferrer&#39;.</td>
                 </tr>
               )}
             </tbody>
@@ -174,10 +174,10 @@ const Security = ({ result: data }) => { // Destructure result and rename to dat
           </table>
           <div className="mt-8 pt-4 border-t border-gray-300">
             <p className={questionClasses}>
-              <strong>Why is 'rel="noopener" or "noreferrer"' required?</strong>
+              <strong>Why is &#39; rel&#34;noopener&#34; or &#34;noreferrer&#34; &#39; required?</strong>
             </p>
             <p className={answerClasses}>
-              Adding `rel="noopener"` or `rel="noreferrer"` to anchor tags with `target="_blank"` is crucial for security and SEO. It prevents the opened page from gaining control over the originating page (a phishing vulnerability) and stops the transfer of referrer information, enhancing user privacy and preventing potential SEO issues related to link juice leakage.
+              Adding `rel=&#34;noopener&#34;` or `rel=&#34;noreferrer&#34;` to anchor tags with `target=&#34;_blank&#34;` is crucial for security and SEO. It prevents the opened page from gaining control over the originating page (a phishing vulnerability) and stops the transfer of referrer information, enhancing user privacy and preventing potential SEO issues related to link juice leakage.
             </p>
           </div>
         </div>

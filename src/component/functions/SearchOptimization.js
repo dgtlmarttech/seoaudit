@@ -97,9 +97,9 @@ const SearchOptimization = ({ result }) => { // Destructure result directly from
             </table>
             <div className="mt-8 pt-4 border-t border-gray-300">
               <p className={questionClasses}>
-                <strong>Why is 'Canonical Tag' required?</strong>
+                <strong>Why is &#39;Canonical Tag&#39; required?</strong>
               </p>
-              <p className={answerClasses}>Utilizing a canonical tag is critical for SEO as it ensures that search engines properly identify the preferred version of a webpage, avoiding duplicate content issues and maintaining the page's ranking authority.</p>
+              <p className={answerClasses}>Utilizing a canonical tag is critical for SEO as it ensures that search engines properly identify the preferred version of a webpage, avoiding duplicate content issues and maintaining the page&#39;s ranking authority.</p>
             </div>
           </div>
 
@@ -156,7 +156,7 @@ const SearchOptimization = ({ result }) => { // Destructure result directly from
             </table>
             <div className="mt-8 pt-4 border-t border-gray-300">
               <p className={questionClasses}>
-                <strong>Why is 'Alternate Links' required?</strong>
+                <strong>Why is &#39;Alternate Links&#39; required?</strong>
               </p>
               <p className={answerClasses}>Implementing alternate link tags is crucial for SEO as they help search engines understand the relationship between different languages or regional versions of a webpage, improving international targeting and organic search visibility.</p>
             </div>
@@ -230,7 +230,7 @@ const SearchOptimization = ({ result }) => { // Destructure result directly from
             </table>
             <div className="mt-8 pt-4 border-t border-gray-300">
               <p className={questionClasses}>
-                <strong>Why is 'Schema Markups' required?</strong>
+                <strong>Why is &#39;Schema Markups&#39; required?</strong>
               </p>
               <p className={answerClasses}>Using schema markup is essential for SEO as it provides search engines with structured data, enhancing the understanding of web page content and increasing the likelihood of appearing in rich snippets and other SERP features, ultimately improving visibility and click-through rates.</p>
             </div>

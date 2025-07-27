@@ -82,7 +82,7 @@ const MetaTags = ({ result }) => {
 
           <div className="mt-8 pt-4 border-t border-gray-300">
             <p className={questionClasses}>
-              <strong>Why is '{tagName}' required?</strong>
+              <strong>Why is &#39;{tagName}&#39; required?</strong>
             </p>
             <p className={answerClasses}>{whyRequired}</p>
           </div>
