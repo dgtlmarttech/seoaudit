@@ -1,8 +1,6 @@
-// Import html2canvas and jsPDF from CDNs
-// In a real project, you would install these via npm/yarn:
-// npm install html2canvas jspdf
-// import html2canvas from 'html2canvas';
-// import { jsPDF } from 'jspdf';
+
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 /**
  * Generates a PDF from the provided HTML element class name with a header and footer.
@@ -11,10 +9,6 @@
  * @param {string} url - The URL being analyzed for the report.
  */
 export const generatePDF = async (className, url) => {
-  // Load html2canvas and jsPDF dynamically to ensure they are available
-  // In a production React/Next.js app, you'd import them at the top
-  const html2canvas = await import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js').then(m => m.default);
-  const { jsPDF } = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
 
   const contentElement = document.querySelector(`.${className}`);
   if (!contentElement) {
