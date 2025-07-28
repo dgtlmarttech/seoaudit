@@ -88,33 +88,25 @@ const PageSpeedInsights = () => {
   };
 
   const CircularScore = ({ score, title }) => {
-    let color;
-    let glowColor;
+    let color, bgColor;
 
-    // Determine the color based on the score
     if (score <= 50) {
-      color = '#FF4D4F'; // Red for low scores
-      glowColor = '#FF4D4F'; // Red glow
+      color = '#ef4444';
+      bgColor = 'bg-red-500';
     } else if (score <= 90) {
-      color = '#FFC107'; // Yellow for medium scores
-      glowColor = '#FFC107'; // Yellow glow
+      color = '#f59e0b';
+      bgColor = 'bg-yellow-500';
     } else {
-      color = '#4CAF50'; // Green for high scores
-      glowColor = '#4CAF50'; // Green glow
+      color = '#22c55e';
+      bgColor = 'bg-green-500';
     }
 
     return (
-      <div className="flex flex-col items-center gap-2">
-        <div
-          className="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg border-4 border-white transition-all duration-300"
-          style={{ backgroundColor: color }}
-        >
+      <div className="flex flex-col items-center gap-3">
+        <div className={`w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg border-4 border-white transition-all duration-300 ${bgColor}`}>
           {score}
         </div>
-        <div
-          className="text-lg font-semibold text-gray-700 text-center"
-          style={{ textShadow: `0 0 10px ${glowColor}, 0 0 20px ${glowColor}, 0 0 30px ${glowColor}` }}
-        >
+        <div className="text-lg font-semibold text-gray-700 text-center">
           {title}
         </div>
       </div>
@@ -170,7 +162,7 @@ const PageSpeedInsights = () => {
     const metricData = [
       {
         name: 'Largest Contentful Paint (LCP)',
-        value: metrics.LARGEST_CONTENTFUL_PAINT_MS?.percentile / 1000 || 0,
+        value: (metrics.LARGEST_CONTENTFUL_PAINT_MS?.percentile / 1000) || 0,
         unit: 'sec',
         ranges: { good: [0, 2.5], average: [2.5, 4], poor: [4, Infinity] },
       },
@@ -182,13 +174,13 @@ const PageSpeedInsights = () => {
       },
       {
         name: 'First Contentful Paint (FCP)',
-        value: metrics.FIRST_CONTENTFUL_PAINT_MS?.percentile / 1000 || 0,
+        value: (metrics.FIRST_CONTENTFUL_PAINT_MS?.percentile / 1000) || 0,
         unit: 'sec',
         ranges: { good: [0, 1.8], average: [1.8, 3], poor: [3, Infinity] },
       },
       {
         name: 'Experimental Time to First Byte (TTFB)',
-        value: metrics.EXPERIMENTAL_TIME_TO_FIRST_BYTE?.percentile / 1000 || 0,
+        value: (metrics.EXPERIMENTAL_TIME_TO_FIRST_BYTE?.percentile / 1000) || 0,
         unit: 'sec',
         ranges: { good: [0, 1], average: [1, 1.5], poor: [1.5, Infinity] },
       },
@@ -203,68 +195,69 @@ const PageSpeedInsights = () => {
     function getRangeColor(value, ranges) {
       if (value >= ranges.good[0] && value <= ranges.good[1]) {
         return "good";
-      }
-      else if (value >= ranges.average[0] && value <= ranges.average[1]) {
+      } else if (value >= ranges.average[0] && value <= ranges.average[1]) {
         return "average";
-      }
-      else {
+      } else {
         return "poor";
       }
     }
 
-
     return (
       <>
         <div
-          className={`p-3 rounded-lg font-semibold text-center mb-6
-          ${checkCoreVitals(experienceData) === 'Pass' ? 'bg-green-100 text-green-800' :
-              checkCoreVitals(experienceData) === 'Fail' ? 'bg-red-100 text-red-800' :
-                'bg-gray-100 text-gray-600'
-            }`}
+          className={`p-3 rounded-lg font-semibold text-center mb-6 ${
+            checkCoreVitals(experienceData) === 'Pass' ? 'bg-green-100 text-green-800' :
+            checkCoreVitals(experienceData) === 'Fail' ? 'bg-red-100 text-red-800' :
+            'bg-gray-100 text-gray-600'
+          }`}
         >
           Core Web Vitals Assessment: {checkCoreVitals(experienceData)}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {metricData.map((metric, index) => (
-            <div className="bg-gray-50 p-5 rounded-lg shadow-sm border border-gray-200" key={index}>
-              <h4 className="text-lg font-semibold mb-3 text-gray-700">{metric.name}</h4>
-              <div className="flex items-center gap-3 mb-2">
-                <progress
-                  value={metric.value}
-                  max={metric.ranges.poor[0] === Infinity ? metric.ranges.average[1] * 1.5 : metric.ranges.poor[0]} // Adjust max for progress bar
-                  className={`w-full h-2 rounded-full overflow-hidden appearance-none
-                  ${getRangeColor(metric.value, metric.ranges) === 'good' ? '[&::-webkit-progress-bar]:bg-green-200 [&::-webkit-progress-value]:bg-green-500' :
-                      getRangeColor(metric.value, metric.ranges) === 'average' ? '[&::-webkit-progress-bar]:bg-yellow-200 [&::-webkit-progress-value]:bg-yellow-500' :
-                        '[&::-webkit-progress-bar]:bg-red-200 [&::-webkit-progress-value]:bg-red-500'
-                    }`}
-                ></progress>
-                <span className="text-sm font-medium text-gray-700">
-                  {metric.value} {metric.unit}
-                </span>
+          {metricData.map((metric, index) => {
+            const rangeColor = getRangeColor(metric.value, metric.ranges);
+            return (
+              <div className="bg-gray-50 p-5 rounded-lg shadow-sm border border-gray-200" key={index}>
+                <h4 className="text-lg font-semibold mb-3 text-gray-700">{metric.name}</h4>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${
+                        rangeColor === 'good' ? 'bg-green-500' :
+                        rangeColor === 'average' ? 'bg-yellow-500' : 'bg-red-500'
+                      }`}
+                      style={{
+                        width: `${Math.min((metric.value / (metric.ranges.poor[0] === Infinity ? metric.ranges.average[1] * 1.5 : metric.ranges.poor[0])) * 100, 100)}%`
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+                    {metric.value.toFixed(metric.unit === 'ms' ? 0 : 2)} {metric.unit}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  <p className="flex items-center gap-1 mb-1">
+                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-green-500"></span> 
+                    Good: {metric.ranges.good.join(' - ')} {metric.unit}
+                  </p>
+                  <p className="flex items-center gap-1 mb-1">
+                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-yellow-500"></span> 
+                    Average: {metric.ranges.average.join(' - ')} {metric.unit}
+                  </p>
+                  <p className="flex items-center gap-1 mb-1">
+                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-red-500"></span> 
+                    Poor: {metric.ranges.poor[0]}{metric.ranges.poor[1] === Infinity ? '+' : ` - ${metric.ranges.poor[1]}`} {metric.unit}
+                  </p>
+                </div>
               </div>
-              <div className="text-xs text-gray-500">
-                <p className="flex items-center gap-1 mb-1">
-                  <span className="w-2.5 h-2.5 rounded-full inline-block bg-red-500"></span> Poor: {metric.ranges.poor[0]} {metric.unit}
-                </p>
-                <p className="flex items-center gap-1 mb-1">
-                  <span className="w-2.5 h-2.5 rounded-full inline-block bg-yellow-500"></span> Average: {metric.ranges.average.join(' - ')}{' '}
-                  {metric.unit}
-                </p>
-                <p className="flex items-center gap-1 mb-1">
-                  <span className="w-2.5 h-2.5 rounded-full inline-block bg-green-500"></span> Good: {metric.ranges.good.join(' - ')}{' '}
-                  {metric.unit}
-                </p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </>
-
-
     );
   };
 
-  const renderData = (view) => {
+   const renderData = (view) => {
     if (!data?.[view]) return <p className="text-gray-600 text-center">No data available for {view} view.</p>;
 
     return (
@@ -283,39 +276,65 @@ const PageSpeedInsights = () => {
 
     return (
       <>
-        <br />
         <button
-          className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 mb-6 self-center"
+          className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 mb-6"
           onClick={handleDownload}
         >
           Download Report as PDF
         </button>
-        <br />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mt-4 both-view">
+        
+        {/* Changed from lg:grid-cols-2 to grid-cols-1 to stack vertically */}
+        <div className="grid grid-cols-1 gap-8 w-full mt-4 both-view">
+          {/* Mobile View Section */}
           <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-            <h2 className="text-2xl font-bold mb-4 text-blue-700">Mobile View</h2>
-            <h3 className="text-xl font-bold mb-3 text-blue-600">This URL</h3>
-            {renderMetrics(data['mobile']?.loadingExperience)}
-            <br />
-            <h3 className="text-xl font-bold mb-3 text-blue-600">Origin</h3>
-            {renderMetrics(data['mobile']?.originLoadingExperience)}
-            <h3 className="text-xl font-bold mb-3 text-blue-600">Diagnose Performance Issues</h3>
-            {renderDiagnose(data['mobile']['lighthouseResult'])}
+            <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Mobile View</h2>
+            
+            <div className="space-y-8"> {/* Use space-y for vertical stacking of sections */}
+              {/* This URL Data for Mobile */}
+              <div>
+                <h3 className="text-xl font-bold mb-3 text-blue-600">This URL</h3>
+                {renderMetrics(data['mobile']?.loadingExperience)}
+              </div>
+              {/* Origin Data for Mobile */}
+              <div>
+                <h3 className="text-xl font-bold mb-3 text-blue-600">Origin</h3>
+                {renderMetrics(data['mobile']?.originLoadingExperience)}
+              </div>
+            </div>
+            
+            {/* Diagnose section applies to the entire mobile view */}
+            <div className="mt-8"> {/* Add margin top to separate from metrics */}
+              {renderDiagnose(data['mobile']['lighthouseResult'])}
+            </div>
           </div>
+
+          {/* Desktop View Section */}
           <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-            <h2 className="text-2xl font-bold mb-4 text-blue-700">Desktop View</h2>
-            <h3 className="text-xl font-bold mb-3 text-blue-600">This URL</h3>
-            {renderMetrics(data['desktop']?.loadingExperience)}
-            <br />
-            <h3 className="text-xl font-bold mb-3 text-blue-600">Origin</h3>
-            {renderMetrics(data['desktop']?.originLoadingExperience)}
-            <h3 className="text-xl font-bold mb-3 text-blue-600">Diagnose Performance Issues</h3>
-            {renderDiagnose(data['desktop']['lighthouseResult'])}
+            <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Desktop View</h2>
+            
+            <div className="space-y-8"> {/* Use space-y for vertical stacking of sections */}
+              {/* This URL Data for Desktop */}
+              <div>
+                <h3 className="text-xl font-bold mb-3 text-blue-600">This URL</h3>
+                {renderMetrics(data['desktop']?.loadingExperience)}
+              </div>
+              {/* Origin Data for Desktop */}
+              <div>
+                <h3 className="text-xl font-bold mb-3 text-blue-600">Origin</h3>
+                {renderMetrics(data['desktop']?.originLoadingExperience)}
+              </div>
+            </div>
+
+            {/* Diagnose section applies to the entire desktop view */}
+            <div className="mt-8"> {/* Add margin top to separate from metrics */}
+              {renderDiagnose(data['desktop']['lighthouseResult'])}
+            </div>
           </div>
         </div>
       </>
     );
   };
+
 
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return 'N/A';
@@ -334,68 +353,36 @@ const PageSpeedInsights = () => {
   const renderLoadingScreen = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[200px] text-lg text-gray-700">
-        <div className="w-16 h-16 rounded-full border-4 border-t-4 border-gray-200 border-t-blue-500 animate-spin mb-4">
-          <div className="circle-inner"></div>
-        </div>
-        <p>Loading... <span className="font-medium text-blue-600">({averageLoadTime ? (averageLoadTime / 1000).toFixed(2) + ' s' : 'N/A'})</span></p>
+        <div className="w-16 h-16 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin mb-4"></div>
+        <p>Analyzing website performance...</p>
+        <p className="text-sm text-gray-500 mt-2">
+          Average load time: {averageLoadTime ? (averageLoadTime / 1000).toFixed(2) + 's' : 'Calculating...'}
+        </p>
       </div>
     );
   };
 
 
-  return (
-    <div className="min-h-screen bg-gray-100 font-inter text-gray-800 p-4 md:p-8 flex flex-col items-center">
-      {/* Tailwind CSS CDN for Inter font and general styling */}
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      <script src="https://cdn.tailwindcss.com"></script>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-      <style>{`
-        /* Custom styles for progress bar to override default appearance */
-        progress::-webkit-progress-bar {
-          background-color: #e5e7eb; /* gray-200 */
-          border-radius: 9999px;
-        }
-        progress::-webkit-progress-value {
-          border-radius: 9999px;
-        }
-        progress.good::-webkit-progress-value {
-          background-color: #22c55e; /* green-500 */
-        }
-        progress.average::-webkit-progress-value {
-          background-color: #f59e0b; /* yellow-500 */
-        }
-        progress.poor::-webkit-progress-value {
-          background-color: #ef4444; /* red-500 */
-        }
-        progress.good::-moz-progress-bar {
-          background-color: #22c55e;
-        }
-        progress.average::-moz-progress-bar {
-          background-color: #f59e0b;
-        }
-        progress.poor::-moz-progress-bar {
-          background-color: #ef4444;
-        }
-      `}</style>
-
-      <div className="w-full max-w-4xl bg-blue-50 rounded-xl shadow-md p-6 md:p-8 mb-8 border border-blue-200 text-blue-900">
+ return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans text-gray-800 p-4 md:p-8 flex flex-col items-center">
+      <div className="w-full max-w-4xl bg-blue-50 rounded-xl shadow-md p-6 md:p-8 mb-8 border border-blue-200">
         <h3 className="text-xl font-semibold mb-3 text-blue-800">Why Core Vitals are Important</h3>
-        <p className="mb-4 leading-relaxed">
+        <p className="mb-4 leading-relaxed text-blue-900">
           Core Web Vitals are essential for measuring the user experience on your website. They focus on key aspects like loading performance, interactivity, and visual stability. By optimizing these factors, you can ensure a smooth and efficient experience for users, which directly impacts your website's engagement, retention, and SEO performance.
         </p>
-        <p className="leading-relaxed">
-          By analyzing Core Vitals, you can identify bottlenecks in your website’s performance and make improvements that can boost user satisfaction and search rankings.
+        <p className="leading-relaxed text-blue-900">
+          By analyzing Core Vitals, you can identify bottlenecks in your website's performance and make improvements that can boost user satisfaction and search rankings.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-3 text-blue-800">Download Your Report</h3>
-        <p className="leading-relaxed">
-          You can download this detailed report as a PDF for free by clicking on the download button 'choose both view to see the download button'. Keep it for your records or share it with your team to improve your website's performance.
+        <p className="leading-relaxed text-blue-900">
+          You can download this detailed report as a PDF for free by clicking on the download button. Choose 'Both' view to see the download option. Keep it for your records or share it with your team to improve your website's performance.
         </p>
       </div>
 
-      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center text-blue-700">Core Vitals Result</h1>
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-xl p-6 md:p-8 mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center text-blue-700">Core Vitals Analysis</h1>
+        
         <div className="flex flex-col md:flex-row gap-4 mb-8 w-full max-w-2xl mx-auto">
           <input
             type="text"
@@ -406,32 +393,44 @@ const PageSpeedInsights = () => {
           />
           <button
             onClick={fetchPageSpeedData}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+            disabled={loading}
+            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Analyze
+            {loading ? 'Analyzing...' : 'Analyze'}
           </button>
         </div>
 
         {loading && renderLoadingScreen()}
-        {error && <p className="text-red-600 text-center text-lg">{error}</p>}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <p className="text-red-600 text-center text-lg">{error}</p>
+          </div>
+        )}
+        
         {data && (
           <div className="results-section">
             <div className="flex justify-center gap-4 mb-6 p-1 bg-gray-200 rounded-full shadow-inner">
               <button
                 onClick={() => setView('mobile')}
-                className={`px-5 py-2 rounded-full font-medium text-gray-700 transition-all duration-200 hover:bg-gray-300 ${view === 'mobile' ? 'bg-blue-600 text-white shadow-md' : ''}`}
+                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${
+                  view === 'mobile' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
+                }`}
               >
                 Mobile
               </button>
               <button
                 onClick={() => setView('desktop')}
-                className={`px-5 py-2 rounded-full font-medium text-gray-700 transition-all duration-200 hover:bg-gray-300 ${view === 'desktop' ? 'bg-blue-600 text-white shadow-md' : ''}`}
+                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${
+                  view === 'desktop' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
+                }`}
               >
                 Desktop
               </button>
               <button
                 onClick={() => setView('both')}
-                className={`px-5 py-2 rounded-full font-medium text-gray-700 transition-all duration-200 hover:bg-gray-300 ${view === 'both' ? 'bg-blue-600 text-white shadow-md' : ''}`}
+                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${
+                  view === 'both' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
+                }`}
               >
                 Both
               </button>
@@ -448,16 +447,14 @@ const PageSpeedInsights = () => {
                   className="px-5 py-2 rounded-full font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all duration-200 shadow-inner"
                 >
                   Switch to{' '}
-                  {experienceView === 'loadingExperience'
-                    ? 'Origin'
-                    : 'This URL'}
+                  {experienceView === 'loadingExperience' ? 'Origin' : 'This URL'}
                 </button>
               </div>
             )}
 
             <div className="text-sm text-gray-600 text-center mb-6">
               <p>
-                <strong>Report from:</strong> {formatTimestamp(data[view]?.analysisUTCTimestamp)}
+                <strong>Report generated:</strong> {formatTimestamp(data[view === 'both' ? 'mobile' : view]?.analysisUTCTimestamp)}
               </p>
             </div>
 
@@ -465,13 +462,11 @@ const PageSpeedInsights = () => {
           </div>
         )}
 
-        {/* Popup Form */}
         {isPopupVisible && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <PopupForm onSubmit={handleFormSubmission} setIsPopupVisible={setIsPopupVisible} />
           </div>
         )}
-
       </div>
     </div>
   );

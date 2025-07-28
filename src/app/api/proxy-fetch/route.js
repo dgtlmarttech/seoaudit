@@ -27,6 +27,7 @@ export async function GET(request) {
       robots: robots.data || 'No /robots.txt found',
       sitemap: sitemap.data || 'No /sitemap.xml found',
       page404: page404.data || 'No 404 page found',
+      url: url,
     });
   } catch (err) {
     console.error('Proxy Fetch Error:', err.message);

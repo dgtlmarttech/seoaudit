@@ -31,7 +31,7 @@ export const generatePDF = async (className, url) => {
     <div style="text-align: center; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
       <div style="display: flex; justify-content: center; align-items: center; border-bottom: 2px solid #34495E; padding-bottom: 10px;">
         <img
-          src="https://placehold.co/100x100/E0E7FF/4F46E5?text=LOGO"
+          src="./logo.jpg"
           alt="Logo"
           style="width: 100px; height: 100px; margin-right: 20px; border-radius: 8px;"
         />

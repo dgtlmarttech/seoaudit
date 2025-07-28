@@ -16,8 +16,8 @@ import TwitterCards from './functions/TwitterCards.js';
 import OpenGraphs from './functions/OpenGraphs.js'
 import URLVulnerability from './functions/URLVulnerability.js';
 
-const Part = ({ partName, result, url }) => {
-  // Function to render a table based on the result object or array
+const Part = ({ partName, result }) => {
+  // console.log('Part Component Rendered:', partName, result, url);
   const renderTable = (item, index) => {
     const tableHeaders = Object.keys(item);
     const rows = tableHeaders.map((key) => {
@@ -46,6 +46,7 @@ const Part = ({ partName, result, url }) => {
       </table>
     );
   };
+
 
   // If "All" is selected, render all parts at once
   if (partName === "All") {
