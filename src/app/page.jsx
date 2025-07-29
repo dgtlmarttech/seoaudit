@@ -291,7 +291,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-sans text-gray-900">
       {/* Hero Section */}
-      <div className="relative overflow-hidden py-16 sm:py-24 lg:py-32">
+      <div className="relative overflow-hidden pt-16">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-10"></div>
         <div className="relative px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-full mb-8 shadow-xl animate-scale-in">
@@ -401,11 +401,11 @@ const Home = () => {
           {isAnalyzed && (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 mb-8 animate-fade-in-up">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4 animate-bounce-once">
+                {/* <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4 animate-bounce-once">
                   <div className="text-3xl font-bold text-green-600">{getOverallScore()}</div>
-                </div>
+                </div> */}
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">Analysis Complete!</h2>
-                <p className="text-gray-600 text-lg">Overall SEO Score: {getOverallScore()}/100</p>
+                {/* <p className="text-gray-600 text-lg">Overall SEO Score: {getOverallScore()}/100</p> */}
               </div>
 
               {/* Score breakdown */}
@@ -421,7 +421,7 @@ const Home = () => {
                     >
                       <div className="flex items-center justify-between w-full mb-2">
                         <PartIcon className={getStatusColor(result?.status)} size={24} />
-                        <span className="text-2xl font-bold text-gray-800">{result?.score || 'N/A'}</span>
+                        {/* <span className="text-2xl font-bold text-gray-800">{result?.score || 'N/A'}</span> */}
                       </div>
                       <h4 className="font-semibold text-gray-900 text-base mb-1">{part.name}</h4>
                       <p className="text-xs text-gray-600 leading-tight">{part.description}</p>
@@ -463,14 +463,14 @@ const Home = () => {
                     <p className="text-gray-600">{selectedPart.description}</p>
                   </div>
                 </div>
-                <div className="text-right">
+                {/* <div className="text-right">
                   <div className="text-3xl font-bold text-gray-800">{allResults[selectedPart.name]?.score || 'N/A'}</div>
                   <div className="text-sm text-gray-600">Score</div>
-                </div>
+                </div> */}
               </div>
 
               {/* Render the specific Part component here */}
-              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+              <div className="bg-gray-50 rounded-xl border border-gray-200">
                 <Part partName={selectedPart.name} result={allResults[selectedPart.name]} />
               </div>
             </div>
