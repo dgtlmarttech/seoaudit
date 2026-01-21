@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Part from '../../component/part';
 import { generatePDF } from '../../utils/DownloadPDF';
 import PopupForm from '../../utils/email';
-
 import { 
   checkTwitterCards, 
   checkOpenGraph, 
