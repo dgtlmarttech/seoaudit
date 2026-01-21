@@ -17,7 +17,7 @@ import {
   Zap, // For Fast Analysis
   Target, // For Accurate Results
   AlertCircle, // For popup
-   Link
+  Link
 } from 'lucide-react';
 
 // Import your actual utility functions
@@ -291,22 +291,22 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-sans text-gray-900">
       {/* Hero Section */}
-      <div className="relative overflow-hidden pt-16">
+      <div className="relative overflow-hidden pt-8 md:pt-12">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-10"></div>
         <div className="relative px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-full mb-8 shadow-xl animate-scale-in">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-6 shadow-xl animate-scale-in">
             <BarChart3 className="text-white" size={40} />
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight animate-fade-in-up">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 leading-tight animate-fade-in-up">
             Deep Dive SEO Analysis
           </h1>
-          <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-10 animate-fade-in-up animation-delay-200">
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-6 animate-fade-in-up animation-delay-200">
             Comprehensive website analysis to boost your search engine rankings.
             Get detailed insights on meta tags, security, performance, and more.
           </p>
 
           {/* Key Features */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
             {[
               { icon: Zap, label: 'Fast Analysis' },
               { icon: Target, label: 'Accurate Results' },
@@ -329,7 +329,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="px-4 sm:px-6 lg:px-8 pb-16 -mt-6 relative z-10">
         <div className="max-w-4xl mx-auto">
 
           {/* URL Input Section */}
@@ -526,9 +526,11 @@ const Home = () => {
       </div>
 
       {/* Popup Form */}
-      {isPopupVisible && (
-        <PopupForm onSubmit={handleFormSubmission} setIsPopupVisible={setIsPopupVisible} />
-      )}
+      {
+        isPopupVisible && (
+          <PopupForm onSubmit={handleFormSubmission} setIsPopupVisible={setIsPopupVisible} />
+        )
+      }
 
       {/* Global CSS for animations (if not already in globals.css) */}
       <style jsx global>{`
