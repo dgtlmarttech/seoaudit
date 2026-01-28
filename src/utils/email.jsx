@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-<<<<<<< HEAD
 const PopupForm = ({ setIsPopupVisible, websiteUrl }) => {
-=======
-const PopupForm = ({ setIsPopupVisible }) => {
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -18,15 +14,11 @@ const PopupForm = ({ setIsPopupVisible }) => {
     country: '',
   });
 
-<<<<<<< HEAD
   const personalDomains = [
     'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com',
     'aol.com', 'icloud.com', 'zoho.com', 'mail.com',
     'protonmail.com', 'yandex.com', 'rediffmail.com'
   ];
-
-=======
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7
   const [isPopupOpen, setIsPopupOpen] = useState(true);
   const [redirectUrl, setRedirectUrl] = useState('');
 
@@ -56,15 +48,12 @@ const PopupForm = ({ setIsPopupVisible }) => {
     if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address.';
       isValid = false;
-<<<<<<< HEAD
     } else {
       const emailDomain = formData.email.split('@')[1]?.toLowerCase();
       if (personalDomains.includes(emailDomain)) {
         newErrors.email = 'Please use a work/business email address.';
         isValid = false;
       }
-=======
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7
     }
 
     // Country validation: Not empty
@@ -143,10 +132,7 @@ const PopupForm = ({ setIsPopupVisible }) => {
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_subject" value="SEO AUDIT LEAD" />
           <input type="hidden" name="_cc" value="lokesh@dgtlmart.com" />
-<<<<<<< HEAD
           <input type="hidden" name="audited_url" value={websiteUrl || ''} />
-=======
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7
 
           {/* Form Group for Name: Relative positioning for label animation */}
           <div className="relative z-0 w-full group">
@@ -250,11 +236,7 @@ const PopupForm = ({ setIsPopupVisible }) => {
   );
 };
 
-<<<<<<< HEAD
 export default PopupForm;
-
-=======
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7
 // Demo component to show the popup in action
 const App = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(true);
@@ -275,10 +257,4 @@ const App = () => {
       )}
     </div>
   );
-<<<<<<< HEAD
 };
-=======
-};
-
-export default App;
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7

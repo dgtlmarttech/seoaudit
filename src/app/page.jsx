@@ -528,11 +528,7 @@ const Home = () => {
       {/* Popup Form */}
       {
         isPopupVisible && (
-<<<<<<< HEAD
           <PopupForm onSubmit={handleFormSubmission} setIsPopupVisible={setIsPopupVisible} websiteUrl={url} />
-=======
-          <PopupForm onSubmit={handleFormSubmission} setIsPopupVisible={setIsPopupVisible} />
->>>>>>> 0166e977464ce788ad9577d60cf06d43230169b7
         )
       }
 
