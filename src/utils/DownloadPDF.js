@@ -176,9 +176,19 @@ export const generatePDF = async (className, url, html2canvasOptions = {}) => {
           // removing them prevents html2canvas from ever seeing the original CSS.
           clonedDocument.querySelectorAll('style, link[rel="stylesheet"]').forEach(node => {
             // Keep font links if possible, but purge anything with potential modern colors
-            if (node.tagName.toLowerCase() === 'link' && node.href.includes('fonts.googleapis.com')) return;
+            if (node.tagName.toLowerCase() === 'link' && (node.href.includes('fonts.googleapis.com') || node.href.includes('fonts.gstatic.com'))) return;
             node.parentNode.removeChild(node);
           });
+
+          // 4. Final Safety Net: String replacement on the entire HTML of the wrapper
+          try {
+            const wrapperHtml = clonedWrapper.innerHTML;
+            if (wrapperHtml.includes('lab(') || wrapperHtml.includes('oklch(') || wrapperHtml.includes('oklab(')) {
+              clonedWrapper.innerHTML = wrapperHtml.replace(/(?:lab|oklch|oklab)\([^)]+\)/g, (match) => toRGB(match));
+            }
+          } catch (e) {
+            console.error('Final string replacement failed:', e);
+          }
 
           // Force some global layout settings that might have been lost
           clonedDocument.body.style.backgroundColor = 'white';
