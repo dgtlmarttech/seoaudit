@@ -1,5 +1,5 @@
 // utils/DownloadPDF.js
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import { jsPDF } from 'jspdf';
 
 // Define standard A4 dimensions and margins in mm
@@ -101,6 +101,7 @@ export const generatePDF = async (className, url, html2canvasOptions = {}) => {
 
     // Clone the content to avoid modifying the live DOM
     const clonedContent = contentElement.cloneNode(true);
+
     tempWrapper.appendChild(clonedContent);
     document.body.appendChild(tempWrapper);
 
@@ -111,6 +112,79 @@ export const generatePDF = async (className, url, html2canvasOptions = {}) => {
         logging: true, // Enable logging to see more html2canvas internal messages
         letterRendering: true,
         allowTaint: true, // Allows loading images from other origins without security error, but taints the canvas
+        onclone: (clonedDocument) => {
+          const clonedWindow = clonedDocument.defaultView || window;
+          const clonedWrapper = clonedDocument.body.querySelector(`.${className}`)?.parentElement;
+          if (!clonedWrapper) return;
+
+          // 1. Setup absolute color converter
+          const canvas = clonedDocument.createElement('canvas');
+          canvas.width = 1;
+          canvas.height = 1;
+          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+          const toRGB = (val) => {
+            if (typeof val !== 'string') return val;
+            if (!val.includes('lab(') && !val.includes('oklch(') && !val.includes('oklab(')) return val;
+
+            return val.replace(/(?:lab|oklch|oklab)\([^)]+\)/g, (match) => {
+              try {
+                ctx.clearRect(0, 0, 1, 1);
+                ctx.fillStyle = match;
+                ctx.fillRect(0, 0, 1, 1);
+                const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+                return a === 255 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(3)})`;
+              } catch (e) {
+                return match;
+              }
+            });
+          };
+
+          // 2. Nuclear Option: Inline ALL styles for EVERY element and normalize colors
+          const allElements = [clonedWrapper, ...clonedWrapper.querySelectorAll('*')];
+
+          allElements.forEach(el => {
+            const style = clonedWindow.getComputedStyle(el);
+            const inlineStyles = [];
+
+            // Standardize all CSS properties
+            for (let i = 0; i < style.length; i++) {
+              const prop = style[i];
+              let value = style.getPropertyValue(prop);
+
+              // Normalize color functions if present
+              if (value.includes('lab(') || value.includes('oklch(') || value.includes('oklab(')) {
+                value = toRGB(value);
+              }
+
+              inlineStyles.push(`${prop}: ${value} !important`);
+            }
+
+            // Apply everything as a big inline style string
+            el.setAttribute('style', inlineStyles.join('; '));
+
+            // Special handling for SVG attributes which aren't always in CSS
+            if (el.tagName.toLowerCase() === 'svg' || el.closest('svg')) {
+              ['fill', 'stroke'].forEach(attr => {
+                const val = el.getAttribute(attr);
+                if (val) el.setAttribute(attr, toRGB(val));
+              });
+            }
+          });
+
+          // 3. Purge all stylesheets. Now that everything is inlined and normalized,
+          // removing them prevents html2canvas from ever seeing the original CSS.
+          clonedDocument.querySelectorAll('style, link[rel="stylesheet"]').forEach(node => {
+            // Keep font links if possible, but purge anything with potential modern colors
+            if (node.tagName.toLowerCase() === 'link' && node.href.includes('fonts.googleapis.com')) return;
+            node.parentNode.removeChild(node);
+          });
+
+          // Force some global layout settings that might have been lost
+          clonedDocument.body.style.backgroundColor = 'white';
+          clonedDocument.body.style.margin = '0';
+          clonedDocument.body.style.padding = '0';
+        },
         // Pass any custom options provided by the user
         ...html2canvasOptions,
       });
@@ -144,20 +218,20 @@ export const generatePDF = async (className, url, html2canvasOptions = {}) => {
 
         // Calculate the position on the new page, accounting for the header
         let currentImgY = (MARGIN_Y_MM + headerHeight) - position;
-        
+
         pdf.addImage(imgData, 'PNG', MARGIN_X_MM, currentImgY, CONTENT_WIDTH_MM, imgHeight, undefined, 'FAST');
-        
+
         heightLeft -= availableContentHeight;
         position += availableContentHeight;
       }
 
       // --- Finalizing pages with correct total page count ---
-      const totalPages = pdf.internal.pages.length -1; // jsPDF counts an initial empty page
+      const totalPages = pdf.internal.pages.length - 1; // jsPDF counts an initial empty page
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
         addFooter(pdf, i, totalPages);
       }
-      
+
       pdf.save(`SEO_Report_${formattedUrl.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.pdf`);
       resolve();
 

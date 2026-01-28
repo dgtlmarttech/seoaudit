@@ -1,7 +1,7 @@
 'use client'
-import React, { useState,useEffect } from 'react';
-import { generatePDF } from '../../utils/DownloadPDF.js';
-import PopupForm from '../../utils/email.jsx';
+import React, { useState, useEffect } from 'react';
+import { generatePDF } from '../../utils/DownloadPDF';
+import PopupForm from '../../utils/email';
 
 const PageSpeedInsights = () => {
   const [url, setUrl] = useState('');
@@ -15,7 +15,7 @@ const PageSpeedInsights = () => {
   const [averageLoadTime, setAverageLoadTime] = useState(null);
   const [isOldUser, setIsOldUser] = useState(false);
 
-  
+
   // Effect to check localStorage only on client-side mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -24,33 +24,33 @@ const PageSpeedInsights = () => {
   }, []);
 
   const fetchPageSpeedData = async () => {
-    if(!isOldUser){
+    if (!isOldUser) {
       setIsPopupVisible(true)
     }
-    else{
-    setLoading(true);
-    setError(null);
-    setData(null);
-    const startTime = Date.now();
-    try {
-      const response = await fetch(
-        `/api/pagespeed?url=${encodeURIComponent(url)}`
-      );
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    else {
+      setLoading(true);
+      setError(null);
+      setData(null);
+      const startTime = Date.now();
+      try {
+        const response = await fetch(
+          `/api/pagespeed?url=${encodeURIComponent(url)}`
+        );
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        const endTime = Date.now(); // Record end time
+        const loadTime = endTime - startTime; // Calculate load time
+        setLoadTimes(prev => [...prev, loadTime]); // Store individual load time
+        setAverageLoadTime(loadTimes.reduce((acc, time) => acc + time, 0) / loadTimes.length); // Calculate average
+        setLoading(false);
       }
-      const result = await response.json();
-      setData(result);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      const endTime = Date.now(); // Record end time
-      const loadTime = endTime - startTime; // Calculate load time
-      setLoadTimes(prev => [...prev, loadTime]); // Store individual load time
-      setAverageLoadTime(loadTimes.reduce((acc, time) => acc + time, 0) / loadTimes.length); // Calculate average
-      setLoading(false);
     }
-  }
   };
 
   const handleDownloadReportPDF = () => {
@@ -68,8 +68,8 @@ const PageSpeedInsights = () => {
   };
 
 
-  const handleDownload=()=>{
-      handleDownloadReportPDF();
+  const handleDownload = () => {
+    handleDownloadReportPDF();
   }
 
 
@@ -112,9 +112,9 @@ const PageSpeedInsights = () => {
       </div>
     );
   };
-  
-  
-  
+
+
+
   const renderDiagnose = (lighthouseResult) => {
     const categories = lighthouseResult.categories;
 
@@ -152,7 +152,7 @@ const PageSpeedInsights = () => {
       </div>
     );
   };
-  
+
 
   const renderMetrics = (experienceData) => {
     if (!experienceData?.metrics) return <p className="text-gray-600 text-center">No data available.</p>;
@@ -205,11 +205,10 @@ const PageSpeedInsights = () => {
     return (
       <>
         <div
-          className={`p-3 rounded-lg font-semibold text-center mb-6 ${
-            checkCoreVitals(experienceData) === 'Pass' ? 'bg-green-100 text-green-800' :
-            checkCoreVitals(experienceData) === 'Fail' ? 'bg-red-100 text-red-800' :
-            'bg-gray-100 text-gray-600'
-          }`}
+          className={`p-3 rounded-lg font-semibold text-center mb-6 ${checkCoreVitals(experienceData) === 'Pass' ? 'bg-green-100 text-green-800' :
+              checkCoreVitals(experienceData) === 'Fail' ? 'bg-red-100 text-red-800' :
+                'bg-gray-100 text-gray-600'
+            }`}
         >
           Core Web Vitals Assessment: {checkCoreVitals(experienceData)}
         </div>
@@ -221,11 +220,10 @@ const PageSpeedInsights = () => {
                 <h4 className="text-lg font-semibold mb-3 text-gray-700">{metric.name}</h4>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${
-                        rangeColor === 'good' ? 'bg-green-500' :
-                        rangeColor === 'average' ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}
+                    <div
+                      className={`h-full rounded-full ${rangeColor === 'good' ? 'bg-green-500' :
+                          rangeColor === 'average' ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}
                       style={{
                         width: `${Math.min((metric.value / (metric.ranges.poor[0] === Infinity ? metric.ranges.average[1] * 1.5 : metric.ranges.poor[0])) * 100, 100)}%`
                       }}
@@ -237,15 +235,15 @@ const PageSpeedInsights = () => {
                 </div>
                 <div className="text-xs text-gray-500">
                   <p className="flex items-center gap-1 mb-1">
-                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-green-500"></span> 
+                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-green-500"></span>
                     Good: {metric.ranges.good.join(' - ')} {metric.unit}
                   </p>
                   <p className="flex items-center gap-1 mb-1">
-                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-yellow-500"></span> 
+                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-yellow-500"></span>
                     Average: {metric.ranges.average.join(' - ')} {metric.unit}
                   </p>
                   <p className="flex items-center gap-1 mb-1">
-                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-red-500"></span> 
+                    <span className="w-2.5 h-2.5 rounded-full inline-block bg-red-500"></span>
                     Poor: {metric.ranges.poor[0]}{metric.ranges.poor[1] === Infinity ? '+' : ` - ${metric.ranges.poor[1]}`} {metric.unit}
                   </p>
                 </div>
@@ -257,7 +255,7 @@ const PageSpeedInsights = () => {
     );
   };
 
-   const renderData = (view) => {
+  const renderData = (view) => {
     if (!data?.[view]) return <p className="text-gray-600 text-center">No data available for {view} view.</p>;
 
     return (
@@ -282,13 +280,13 @@ const PageSpeedInsights = () => {
         >
           Download Report as PDF
         </button>
-        
+
         {/* Changed from lg:grid-cols-2 to grid-cols-1 to stack vertically */}
         <div className="grid grid-cols-1 gap-8 w-full mt-4 both-view">
           {/* Mobile View Section */}
           <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
             <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Mobile View</h2>
-            
+
             <div className="space-y-8"> {/* Use space-y for vertical stacking of sections */}
               {/* This URL Data for Mobile */}
               <div>
@@ -301,7 +299,7 @@ const PageSpeedInsights = () => {
                 {renderMetrics(data['mobile']?.originLoadingExperience)}
               </div>
             </div>
-            
+
             {/* Diagnose section applies to the entire mobile view */}
             <div className="mt-8"> {/* Add margin top to separate from metrics */}
               {renderDiagnose(data['mobile']['lighthouseResult'])}
@@ -311,7 +309,7 @@ const PageSpeedInsights = () => {
           {/* Desktop View Section */}
           <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
             <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Desktop View</h2>
-            
+
             <div className="space-y-8"> {/* Use space-y for vertical stacking of sections */}
               {/* This URL Data for Desktop */}
               <div>
@@ -363,7 +361,7 @@ const PageSpeedInsights = () => {
   };
 
 
- return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans text-gray-800 p-4 md:p-8 flex flex-col items-center">
       <div className="w-full max-w-4xl bg-blue-50 rounded-xl shadow-md p-6 md:p-8 mb-8 border border-blue-200">
         <h3 className="text-xl font-semibold mb-3 text-blue-800">Why Core Vitals are Important</h3>
@@ -382,7 +380,7 @@ const PageSpeedInsights = () => {
 
       <div className="w-full max-w-4xl bg-white rounded-xl shadow-xl p-6 md:p-8 mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center text-blue-700">Core Vitals Analysis</h1>
-        
+
         <div className="flex flex-col md:flex-row gap-4 mb-8 w-full max-w-2xl mx-auto">
           <input
             type="text"
@@ -406,31 +404,28 @@ const PageSpeedInsights = () => {
             <p className="text-red-600 text-center text-lg">{error}</p>
           </div>
         )}
-        
+
         {data && (
           <div className="results-section">
             <div className="flex justify-center gap-4 mb-6 p-1 bg-gray-200 rounded-full shadow-inner">
               <button
                 onClick={() => setView('mobile')}
-                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${
-                  view === 'mobile' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${view === 'mobile' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
+                  }`}
               >
                 Mobile
               </button>
               <button
                 onClick={() => setView('desktop')}
-                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${
-                  view === 'desktop' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${view === 'desktop' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
+                  }`}
               >
                 Desktop
               </button>
               <button
                 onClick={() => setView('both')}
-                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${
-                  view === 'both' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`px-5 py-2 rounded-full font-medium transition-all duration-200 ${view === 'both' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-300'
+                  }`}
               >
                 Both
               </button>

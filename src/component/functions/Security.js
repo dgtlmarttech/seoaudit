@@ -18,7 +18,7 @@ const Security = ({ result: data }) => {
       const rel = linkElement.rel ? linkElement.rel.toLowerCase() : '';
       const hasNoopener = rel.includes('noopener');
       const hasNoreferrer = rel.includes('noreferrer');
-      
+
       return {
         status: (hasNoopener || hasNoreferrer) ? 'secure' : 'vulnerable',
         attributes: {
@@ -83,18 +83,18 @@ const Security = ({ result: data }) => {
       try {
         const url = new URL(href);
         const domain = url.hostname.toLowerCase();
-        
+
         // High trust domains
         const trustedDomains = ['google.com', 'microsoft.com', 'apple.com', 'github.com', 'stackoverflow.com'];
         if (trustedDomains.some(trusted => domain.includes(trusted))) {
           return { level: 'Low', color: 'text-green-600', bg: 'bg-green-50' };
         }
-        
+
         // Medium risk indicators
         if (domain.includes('bit.ly') || domain.includes('tinyurl') || url.pathname.includes('redirect')) {
           return { level: 'High', color: 'text-red-600', bg: 'bg-red-50' };
         }
-        
+
         return { level: 'Medium', color: 'text-yellow-600', bg: 'bg-yellow-50' };
       } catch (e) {
         return { level: 'Unknown', color: 'text-gray-600', bg: 'bg-gray-50' };
@@ -103,18 +103,30 @@ const Security = ({ result: data }) => {
 
     // Process and filter links
     const processedLinks = data.map((row, index) => {
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = row;
-      const linkElement = tempDiv.querySelector('a');
+      // Use regex to extract href and text from the HTML string 'row'
+      const hrefMatch = /href=["']([^"']*)["']/i.exec(row);
+      const relMatch = /rel=["']([^"']*)["']/i.exec(row);
 
-      if (!linkElement || !linkElement.href) {
+      if (!hrefMatch) {
         return null;
       }
 
-      const href = linkElement.href;
+      const href = hrefMatch[1];
+      const rel = relMatch ? relMatch[1] : '';
       const isSocial = isSocialMediaLink(href);
       const isSameDomain = isSameRootDomain(href);
-      const security = checkRelAttributes(linkElement);
+
+      // Inline check for rel attributes
+      const hasNoopener = rel.toLowerCase().includes('noopener');
+      const hasNoreferrer = rel.toLowerCase().includes('noreferrer');
+      const security = {
+        status: (hasNoopener || hasNoreferrer) ? 'secure' : 'vulnerable',
+        attributes: {
+          noopener: hasNoopener,
+          noreferrer: hasNoreferrer
+        },
+        icon: (hasNoopener || hasNoreferrer) ? '🔒' : '⚠️'
+      };
       const risk = getRiskLevel(href);
       const domain = getDomain(href);
 
@@ -138,7 +150,7 @@ const Security = ({ result: data }) => {
     const securityScore = totalLinks > 0 ? Math.round((secureLinks / totalLinks) * 100) : 100;
 
     const overallStatus = vulnerableLinks === 0 ? 'Success' : 'Failure';
-    
+
     const getSecurityLevel = (score) => {
       if (score === 100) return { level: 'Excellent', color: 'text-green-600', bg: 'bg-green-50' };
       if (score >= 80) return { level: 'Good', color: 'text-blue-600', bg: 'bg-blue-50' };
@@ -155,10 +167,9 @@ const Security = ({ result: data }) => {
     const sectionHeadingClasses = "text-2xl font-semibold text-gray-700 mb-4 border-b pb-2";
     const questionClasses = "text-lg font-semibold text-gray-800 mb-2";
     const answerClasses = "text-gray-700 leading-relaxed";
-    
+
     const outputStatusClasses = (isSuccess) =>
-      `inline-block px-3 py-1 rounded-full text-sm font-medium ${
-        isSuccess ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+      `inline-block px-3 py-1 rounded-full text-sm font-medium ${isSuccess ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
       }`;
 
     const SecurityBadge = ({ security }) => {
@@ -167,9 +178,8 @@ const Security = ({ result: data }) => {
         <div className="flex items-center space-x-2">
           <span className="text-lg">{security.icon}</span>
           <div className="flex flex-col">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              isSecure ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${isSecure ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}>
               {isSecure ? 'Secure' : 'Vulnerable'}
             </span>
             {isSecure && (
@@ -225,10 +235,10 @@ const Security = ({ result: data }) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="mb-10 p-6 border border-gray-200 rounded-lg bg-gray-50">
               <h3 className={sectionHeadingClasses}>External Links Security Analysis</h3>
-              
+
               <div className="overflow-x-auto">
                 <table className={`${tableClasses} table-fixed`}>
                   <thead>
@@ -247,10 +257,10 @@ const Security = ({ result: data }) => {
                           <td className={tdClasses}>{index + 1}</td>
                           <td className={tdClasses}>
                             <div className="space-y-1">
-                              <a 
-                                href={link.href} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
+                              <a
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-blue-600 hover:underline break-all text-sm"
                               >
                                 {link.href.length > 60 ? `${link.href.substring(0, 60)}...` : link.href}
@@ -312,11 +322,10 @@ const Security = ({ result: data }) => {
                       <h4 className="font-semibold text-gray-700 mb-2">Security Score</h4>
                       <div className="flex items-center space-x-2">
                         <div className="w-24 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full ${
-                              securityScore >= 80 ? 'bg-green-500' : 
-                              securityScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-                            }`}
+                          <div
+                            className={`h-2 rounded-full ${securityScore >= 80 ? 'bg-green-500' :
+                                securityScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                              }`}
                             style={{ width: `${securityScore}%` }}
                           ></div>
                         </div>
@@ -324,11 +333,11 @@ const Security = ({ result: data }) => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <h4 className="font-semibold text-gray-700 mb-2">Analysis Results</h4>
                     <p className="text-gray-600 leading-relaxed">
-                      {overallStatus === 'Success' 
+                      {overallStatus === 'Success'
                         ? `Excellent security implementation! All ${totalLinks} external link${totalLinks !== 1 ? 's' : ''} include proper security attributes (rel="noopener" or rel="noreferrer"). This prevents potential security vulnerabilities including window object manipulation and referrer information leakage, ensuring optimal user protection and SEO performance.`
                         : `Security vulnerabilities detected! ${vulnerableLinks} out of ${totalLinks} external link${totalLinks !== 1 ? 's' : ''} lack proper security attributes. Adding rel="noopener" or rel="noreferrer" to these links is crucial for preventing security vulnerabilities and maintaining SEO integrity.`
                       }
@@ -386,8 +395,8 @@ const Security = ({ result: data }) => {
           <div className="text-red-500 text-6xl mb-4">🚨</div>
           <h2 className="text-2xl font-bold text-red-800 mb-4">Security Analysis Error</h2>
           <p className="text-red-600 mb-4">{error.message || 'An unexpected error occurred during security analysis.'}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
           >
             Retry Analysis

@@ -20,6 +20,15 @@ const getCleanedMatchContent = (match) => {
  */
 const decodeHtmlEntities = (html) => {
     if (typeof html !== 'string') return '';
+    if (typeof document === 'undefined') {
+        // Fallback for server-side: simple decoding or return as is
+        // For a more robust solution, use a library like 'he' or 'entities'
+        return html.replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&#039;/g, "'");
+    }
     const textarea = document.createElement('textarea');
     textarea.innerHTML = html;
     return textarea.value;
